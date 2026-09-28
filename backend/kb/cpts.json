@@ -1,0 +1,25 @@
+{
+  "assumptions": {
+    "model":"Each fault is scored as a binary hypothesis with conditionally independent binary symptoms (naive-Bayes Bayesian network). Fault hypotheses are normalized to sum to one for display; this is a ranking model, not a calibrated vehicle-specific probability.",
+    "priors":"P(fault) values are illustrative baseline rates per diagnostic episode, not fleet statistics.",
+    "likelihoods":"P(symptom present | fault) is a hand-estimated sensitivity; absent modeled symptoms use the listed P(symptom present | no fault) false-positive rate. Environmental and vehicle differences are not modeled.",
+    "evidence":"Selected symptoms are present; only explicitly supplied absent symptoms count as negative evidence. Unmentioned symptoms are unreported. Use results as educational guidance, not a substitute for inspection."
+  },
+  "false_positive_default":0.06,
+  "faults": {
+    "coolant_leak":{"prior":0.065,"symptoms":{"engine_overheating":0.78,"low_coolant":0.88,"coolant_puddle_under_car":0.86,"temperature_warning_light":0.62,"steam_from_hood":0.6,"white_smoke":0.2}},
+    "faulty_thermostat":{"prior":0.055,"symptoms":{"engine_overheating":0.82,"temperature_warning_light":0.72,"steam_from_hood":0.48,"low_coolant":0.18}},
+    "weak_or_dead_battery":{"prior":0.075,"symptoms":{"no_crank_clicking_sound":0.84,"dim_headlights":0.8,"hard_starting":0.72,"accessories_failing":0.55,"battery_warning_light":0.25}},
+    "faulty_alternator":{"prior":0.055,"symptoms":{"battery_warning_light":0.84,"dim_headlights":0.78,"accessories_failing":0.72,"engine_stalling":0.35,"hard_starting":0.48}},
+    "failed_starter_motor":{"prior":0.035,"symptoms":{"no_crank_clicking_sound":0.82,"hard_starting":0.82,"engine_stalling":0.12}},
+    "worn_brake_pads":{"prior":0.09,"symptoms":{"squealing_brakes":0.82,"grinding_brakes":0.7,"brake_warning_light":0.36,"vibration_when_braking":0.3}},
+    "warped_brake_rotors":{"prior":0.055,"symptoms":{"vibration_when_braking":0.86,"pulling_when_braking":0.54,"squealing_brakes":0.38,"grinding_brakes":0.24}},
+    "brake_fluid_leak_or_air_in_lines":{"prior":0.025,"symptoms":{"spongy_brake_pedal":0.88,"brake_warning_light":0.72,"pulling_when_braking":0.4}},
+    "ignition_or_spark_plug_failure":{"prior":0.08,"symptoms":{"rough_idling":0.78,"engine_misfire":0.84,"hard_starting":0.58,"engine_stalling":0.52,"check_engine_light":0.55,"loss_of_power":0.43}},
+    "clogged_fuel_injector_or_filter":{"prior":0.06,"symptoms":{"hesitation_on_acceleration":0.78,"poor_mileage":0.68,"engine_misfire":0.48,"loss_of_power":0.62,"engine_stalling":0.35,"fuel_smell":0.42}},
+    "faulty_o2_sensor_or_catalytic_converter":{"prior":0.045,"symptoms":{"rotten_egg_smell":0.72,"check_engine_light":0.72,"loss_of_power":0.62,"poor_mileage":0.6,"black_smoke":0.38,"loud_exhaust_noise":0.32}},
+    "low_oil_or_oil_leak":{"prior":0.055,"symptoms":{"oil_pressure_light":0.78,"oil_leak_under_car":0.82,"burning_oil_smell":0.76,"blue_smoke":0.48,"knocking_noise":0.52,"engine_overheating":0.22}},
+    "transmission_fluid_low_or_clutch_wear":{"prior":0.05,"symptoms":{"gear_slipping":0.84,"delayed_gear_engagement":0.74,"burning_smell_from_transmission":0.7,"loss_of_power":0.34,"poor_mileage":0.24}},
+    "worn_suspension_or_wheel_misalignment":{"prior":0.075,"symptoms":{"steering_wheel_vibration":0.68,"vehicle_pulls_to_one_side":0.78,"clunking_over_bumps":0.7,"uneven_tire_wear":0.82,"vibration_when_braking":0.28,"pulling_when_braking":0.3}}
+  }
+}

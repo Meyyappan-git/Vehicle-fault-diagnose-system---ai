@@ -1,0 +1,22 @@
+{
+  "rules": [
+    {"id":"R1","when":["engine_overheating","low_coolant","coolant_puddle_under_car"],"fault":"coolant_leak","text":"Low coolant, visible coolant loss, and overheating indicate a coolant leak."},
+    {"id":"R2","when":["engine_overheating","temperature_warning_light","steam_from_hood"],"fault":"faulty_thermostat","text":"Overheating with a temperature warning and steam is consistent with a stuck thermostat."},
+    {"id":"R3","when":["no_crank_clicking_sound","dim_headlights","hard_starting"],"fault":"weak_or_dead_battery","text":"Clicking, dim lights, and hard starting indicate insufficient battery power."},
+    {"id":"R4","when":["battery_warning_light","dim_headlights","accessories_failing"],"fault":"faulty_alternator","text":"A charging warning with dim lights and failing accessories points to alternator output."},
+    {"id":"R5","when":["no_crank_clicking_sound","hard_starting","battery_warning_light"],"fault":"failed_starter_motor","text":"A no-crank condition despite a charging warning can indicate a failed starter motor."},
+    {"id":"R6","when":["squealing_brakes","grinding_brakes","brake_warning_light"],"fault":"worn_brake_pads","text":"Brake squeal or grinding with a warning light indicates severely worn pads."},
+    {"id":"R7","when":["vibration_when_braking","pulling_when_braking","squealing_brakes"],"fault":"warped_brake_rotors","text":"Brake vibration and pulling with squeal are consistent with uneven rotor surfaces."},
+    {"id":"R8","when":["spongy_brake_pedal","brake_warning_light","pulling_when_braking"],"fault":"brake_fluid_leak_or_air_in_lines","text":"A spongy pedal with a brake warning suggests air or fluid loss in the hydraulic lines."},
+    {"id":"R9","when":["rough_idling","engine_misfire","hard_starting"],"fault":"ignition_or_spark_plug_failure","text":"Misfire, rough idle, and hard starting are characteristic of ignition faults."},
+    {"id":"R10","when":["hesitation_on_acceleration","poor_mileage","engine_misfire"],"fault":"clogged_fuel_injector_or_filter","text":"Hesitation with poor economy and misfire suggests restricted fuel delivery."},
+    {"id":"R11","when":["rotten_egg_smell","check_engine_light","loss_of_power"],"fault":"faulty_o2_sensor_or_catalytic_converter","text":"Sulfur exhaust odor, a warning light, and power loss suggest an emissions-system fault."},
+    {"id":"R12","when":["oil_pressure_light","oil_leak_under_car","burning_oil_smell"],"fault":"low_oil_or_oil_leak","text":"Low oil pressure with a visible leak and burning-oil odor requires immediate attention."},
+    {"id":"R13","when":["gear_slipping","delayed_gear_engagement","burning_smell_from_transmission"],"fault":"transmission_fluid_low_or_clutch_wear","text":"Slipping, delayed engagement, and a transmission burning smell indicate fluid or clutch trouble."},
+    {"id":"R14","when":["steering_wheel_vibration","vehicle_pulls_to_one_side","uneven_tire_wear"],"fault":"worn_suspension_or_wheel_misalignment","text":"Steering vibration, pulling, and uneven tire wear point to alignment or suspension wear."},
+    {"id":"R15","when":["engine_overheating","low_coolant"],"fault":"coolant_leak","text":"Overheating combined with low coolant supports coolant loss."},
+    {"id":"R16","when":["no_crank_clicking_sound","dim_headlights"],"fault":"weak_or_dead_battery","text":"A clicking no-crank and dim headlights are strong signs of a weak battery."},
+    {"id":"R17","when":["grinding_brakes","squealing_brakes"],"fault":"worn_brake_pads","text":"Grinding together with brake squeal commonly indicates pad wear."},
+    {"id":"R18","when":["engine_misfire","check_engine_light"],"fault":"ignition_or_spark_plug_failure","text":"A misfire and check-engine light commonly accompany ignition faults."}
+  ]
+}

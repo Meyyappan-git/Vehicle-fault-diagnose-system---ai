@@ -1,0 +1,20 @@
+{
+  "actions":["continue_driving","inspect_soon","repair_now","tow_vehicle"],
+  "labels":{"continue_driving":"Continue driving","inspect_soon":"Inspect soon","repair_now":"Repair now","tow_vehicle":"Tow vehicle"},
+  "utilities": {
+    "coolant_leak":{"continue_driving":-95,"inspect_soon":-25,"repair_now":75,"tow_vehicle":55},
+    "faulty_thermostat":{"continue_driving":-85,"inspect_soon":-20,"repair_now":70,"tow_vehicle":45},
+    "weak_or_dead_battery":{"continue_driving":-35,"inspect_soon":35,"repair_now":65,"tow_vehicle":10},
+    "faulty_alternator":{"continue_driving":-75,"inspect_soon":-10,"repair_now":70,"tow_vehicle":50},
+    "failed_starter_motor":{"continue_driving":-30,"inspect_soon":35,"repair_now":65,"tow_vehicle":15},
+    "worn_brake_pads":{"continue_driving":-90,"inspect_soon":-20,"repair_now":75,"tow_vehicle":55},
+    "warped_brake_rotors":{"continue_driving":-55,"inspect_soon":15,"repair_now":70,"tow_vehicle":25},
+    "brake_fluid_leak_or_air_in_lines":{"continue_driving":-120,"inspect_soon":-80,"repair_now":75,"tow_vehicle":80},
+    "ignition_or_spark_plug_failure":{"continue_driving":-35,"inspect_soon":30,"repair_now":65,"tow_vehicle":10},
+    "clogged_fuel_injector_or_filter":{"continue_driving":-25,"inspect_soon":35,"repair_now":60,"tow_vehicle":0},
+    "faulty_o2_sensor_or_catalytic_converter":{"continue_driving":-60,"inspect_soon":20,"repair_now":60,"tow_vehicle":25},
+    "low_oil_or_oil_leak":{"continue_driving":-125,"inspect_soon":-70,"repair_now":75,"tow_vehicle":85},
+    "transmission_fluid_low_or_clutch_wear":{"continue_driving":-90,"inspect_soon":-25,"repair_now":65,"tow_vehicle":60},
+    "worn_suspension_or_wheel_misalignment":{"continue_driving":-45,"inspect_soon":30,"repair_now":60,"tow_vehicle":10}
+  }
+}
