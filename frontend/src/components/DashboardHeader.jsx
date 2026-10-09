@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Activity, CircleHelp, Gauge, ShieldCheck } from 'lucide-react'
+import { Activity, CircleHelp, Gauge } from 'lucide-react'
 
 export default function DashboardHeader({ online }) {
   return (
@@ -21,8 +21,7 @@ export default function DashboardHeader({ online }) {
           <Gauge className="gauge-icon" size={15} />
         </div>
         <div className="cluster-divider" />
-        <div className="sdg-badge"><ShieldCheck size={16} /><span>SDG 9<br /><small>INDUSTRY + INNOVATION</small></span></div>
-        <button className="icon-button help-button" type="button" title="About this educational tool" aria-label="About this educational tool"><CircleHelp size={18} /></button>
+        <button className="icon-button help-button" type="button" title="About this diagnostic tool" aria-label="About this diagnostic tool"><CircleHelp size={18} /></button>
       </div>
     </header>
   )

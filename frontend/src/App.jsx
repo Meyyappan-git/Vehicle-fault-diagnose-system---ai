@@ -5,6 +5,7 @@ import DashboardHeader from './components/DashboardHeader.jsx'
 import ResultsPanel from './components/ResultsPanel.jsx'
 import SymptomSelector from './components/SymptomSelector.jsx'
 import VehiclePanel from './components/VehiclePanel.jsx'
+import BayesianSimulator from './components/BayesianSimulator.jsx'
 import { askAssistant, diagnose, getHealth, getMeta } from './api/client.js'
 
 const initialVehicle = { make: '', model: '', year: '', mileage: '', fuel_type: '' }
@@ -12,6 +13,7 @@ const workflow = [
   { id: 'vehicle', label: 'Vehicle', heading: 'Tell us about your vehicle', detail: 'A few details help frame the diagnostic context.' },
   { id: 'symptoms', label: 'Symptoms', heading: 'Choose the warning signs', detail: 'Select the signals you can confirm, then add any useful context.' },
   { id: 'diagnosis', label: 'Diagnosis', heading: 'Review the diagnostic readout', detail: 'Compare the leading hypotheses and recommended next action.' },
+  { id: 'simulator', label: 'Simulator', heading: 'Bayesian What-If Simulator', detail: 'Toggle evidence to see how it affects posterior probabilities.' },
   { id: 'assistant', label: 'Assistant', heading: 'Explore the reasoning', detail: 'Ask why a fault ranked highly or test a what-if scenario.' },
 ]
 
@@ -33,12 +35,20 @@ export default function App() {
   const [conversation, setConversation] = useState([])
   const [feedback, setFeedback] = useState(() => localStorage.getItem('vfa-feedback') || '')
 
-  useEffect(() => {
+  const checkConnection = () => {
     Promise.all([getMeta(), getHealth()]).then(([catalog]) => {
       setMeta(catalog)
       setOnline(true)
     }).catch(() => setOnline(false))
-  }, [])
+  };
+
+  useEffect(() => {
+    checkConnection();
+    const interval = setInterval(() => {
+      if (!online) checkConnection();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [online])
 
   function changeVehicle(field, value) {
     setVehicle((current) => ({ ...current, [field]: value }))
@@ -86,12 +96,20 @@ export default function App() {
   }
 
   async function sendQuestion(question) {
-    if (!lastPayload || !diagnosis) return
+    const payload = lastPayload || buildPayload()
     setConversation((current) => [...current, { role: 'user', text: question }])
     try {
-      const result = await askAssistant(question, lastPayload, diagnosis)
-      if (result.diagnosis) setDiagnosis(result.diagnosis)
-      setConversation((current) => [...current, { role: 'assistant', text: result.answer }])
+      const result = await askAssistant(question, payload, diagnosis)
+      if (result.diagnosis) {
+        setDiagnosis(result.diagnosis)
+        setLastPayload(payload)
+      }
+      setConversation((current) => [...current, { 
+        role: 'assistant', 
+        text: result.answer,
+        sources: result.sources,
+        web_search_performed: result.web_search_performed
+      }])
     } catch (problem) {
       setConversation((current) => [...current, { role: 'assistant', text: problem.message }])
     }
@@ -137,10 +155,22 @@ export default function App() {
             <section className="signal-summary"><span className="summary-led" /><span>LIVE INPUT</span><b>{selected.length.toString().padStart(2, '0')}</b><span>CONFIRMED SIGNALS</span><i /><span>{activeSystem === 'All' ? 'ALL SYSTEMS' : activeSystem.toUpperCase()}</span><span className="summary-spacer" /><button type="button" onClick={clearEvidence} disabled={!selected.length && !notes}>CLEAR ALL</button></section>
           </>}
           {activePage === 'diagnosis' && <>
-            <ResultsPanel diagnosis={diagnosis} loading={loading} onRun={runDiagnosis} selectedCount={evidenceCount} onWhy={() => diagnosis && sendQuestion('Why this fault?')} />
+            <ResultsPanel diagnosis={diagnosis} loading={loading} onRun={runDiagnosis} selectedCount={evidenceCount} onWhy={() => { setActivePage('assistant'); sendQuestion('Why this fault?'); }} />
             {diagnosis && <div className="feedback-strip page-feedback"><span>{feedback ? 'FEEDBACK RECORDED' : 'WAS THIS READOUT USEFUL?'}</span><button type="button" aria-label="Mark diagnosis helpful" title="Helpful" className={feedback === 'helpful' ? 'feedback-active' : ''} onClick={() => saveFeedback('helpful')}><ThumbsUp size={14} />{feedback === 'helpful' && <Check size={12} />}</button><button type="button" aria-label="Mark diagnosis not helpful" title="Not helpful" className={feedback === 'not-helpful' ? 'feedback-active' : ''} onClick={() => saveFeedback('not-helpful')}><ThumbsDown size={14} />{feedback === 'not-helpful' && <Check size={12} />}</button><Heart size={13} className="footer-heart" /></div>}
           </>}
-          {activePage === 'assistant' && <AssistantPanel onAsk={sendQuestion} conversation={conversation} disabled={!diagnosis} />}
+          {activePage === 'simulator' && (
+            <BayesianSimulator initialDiagnosis={diagnosis} allSymptoms={meta.symptoms} basePayload={buildPayload()} />
+          )}
+          {activePage === 'assistant' && (
+            <AssistantPanel
+              onAsk={sendQuestion}
+              conversation={conversation}
+              diagnosis={diagnosis}
+              vehicle={vehicle}
+              selectedSymptoms={selected}
+              onClear={() => setConversation([])}
+            />
+          )}
           <div className="page-actions">
             {pageIndex > 0 ? <button type="button" className="page-back" onClick={() => setActivePage(previousPage.id)}><ArrowLeft size={15} /> BACK</button> : <span className="page-back-placeholder">VEHICLE INTAKE</span>}
             <span className="page-counter">STEP 0{pageIndex + 1} <i /> 04</span>

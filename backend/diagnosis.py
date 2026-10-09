@@ -9,7 +9,7 @@ from backend.logic.forward_chain import HornRule, forward_chain
 from backend.logic.unification import Atom
 from backend.nlp.parser import extract_symptoms
 from backend.prob.bayes_net import posterior_probabilities
-from backend.prob.decision_net import choose_action, expected_utilities
+from backend.prob.decision_net import choose_action, expected_utilities, expected_costs
 
 KB_DIR = Path(__file__).parent / "kb"
 
@@ -54,6 +54,7 @@ def run_diagnosis(payload: dict[str, Any], knowledge_base: dict[str, Any] | None
     probabilities, inference_engine = posterior_probabilities(kb["cpts"], present, absent)
     fault_by_id = {fault["id"]: fault for fault in facts_data["faults"]}
     utilities = expected_utilities(probabilities, kb["utilities"])
+    costs = expected_costs(probabilities, kb["utilities"])
     recommended_action = choose_action(utilities)
     action_labels = kb["utilities"]["labels"]
     rule_map = {item["rule_id"]: item for item in fired}
@@ -91,8 +92,8 @@ def run_diagnosis(payload: dict[str, Any], knowledge_base: dict[str, Any] | None
         "top_faults": top_faults,
         "confidence": top_faults[0]["probability"],
         "severity": top_faults[0]["severity"],
-        "recommended_action": {"id": recommended_action, "label": action_labels[recommended_action], "expected_utility": utilities[recommended_action]},
-        "expected_utilities": [{"action": key, "label": action_labels[key], "value": value} for key, value in utilities.items()],
+        "recommended_action": {"id": recommended_action, "label": action_labels[recommended_action], "expected_utility": utilities[recommended_action], "expected_cost": costs.get(recommended_action, 0)},
+        "expected_utilities": [{"action": key, "label": action_labels[key], "value": value, "cost": costs.get(key, 0)} for key, value in utilities.items()],
         "fired_rules": fired,
         "unification_steps": unification_steps,
         "posterior_table": [{"fault": fault_id, "label": fault_by_id[fault_id]["label"], "probability": round(probability, 4), "severity": fault_by_id[fault_id]["severity"]} for fault_id, probability in ranked],
